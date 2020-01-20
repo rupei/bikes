@@ -40,7 +40,14 @@ class currInfo():
 data = pd.read_csv("data/day.csv")
 
 # data trimming
-data = data[['temp', 'season', 'weathersit', 'cnt']]
+data = data[['temp', 'season', 'windspeed', 'hum', 'cnt']]
+
+data['spring'] = np.multiply(data['season'] == 1, 1)
+data['summer'] = np.multiply(data['season'] == 2, 1)
+data['fall'] = np.multiply(data['season'] == 3, 1)
+data['winter'] = np.multiply(data['season'] == 4, 1)
+data = data.drop(['season'], 1)
+
 curr = currInfo()
 # data = curr.selectRows(data)
 
@@ -66,5 +73,3 @@ for _ in range(1000):
 
 accuracy_lst.sort()
 print("accuracy: " + str(accuracy_lst[500]) + "\n")
-
-# next day prediction
