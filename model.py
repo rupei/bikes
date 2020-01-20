@@ -1,9 +1,11 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
 from sklearn.metrics import r2_score
 from datetime import datetime
 
@@ -42,6 +44,7 @@ data = pd.read_csv("data/day.csv")
 # data trimming
 data = data[['temp', 'season', 'windspeed', 'hum', 'cnt']]
 
+# one hot encoding
 data['spring'] = np.multiply(data['season'] == 1, 1)
 data['summer'] = np.multiply(data['season'] == 2, 1)
 data['fall'] = np.multiply(data['season'] == 3, 1)
@@ -55,21 +58,27 @@ x = np.array(data.drop(['cnt'], 1))
 y = np.array(data['cnt'])
 
 accuracy_lst = []
+mse_lst = []
 
-for _ in range(1000):
-    # training
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2)
-    poly = PolynomialFeatures(degree=2)
-    model = LinearRegression()
+# for _ in range(1000):
+# training
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2)
+poly = PolynomialFeatures(degree=2)
+model = LinearRegression()
 
-    x_poly_train = poly.fit_transform(x_train)
-    x_poly_test = poly.fit_transform(x_test)
+x_poly_train = poly.fit_transform(x_train)
+x_poly_test = poly.fit_transform(x_test)
 
-    model.fit(x_poly_train, y_train)
-    y_pred = model.predict(x_poly_test)
+model.fit(x_poly_train, y_train)
+y_pred = model.predict(x_poly_test)
 
-    accuracy = model.score(x_poly_test, y_test)
-    accuracy_lst.append(accuracy)
+accuracy = r2_score(y_test, y_pred)
+mse = mean_squared_error(y_test, y_pred)
+accuracy_lst.append(accuracy)
+mse_lst.append(mse)
 
 accuracy_lst.sort()
-print("accuracy: " + str(accuracy_lst[500]) + "\n")
+mse_lst.sort()
+
+# print("accuracy: " + str(accuracy_lst[500]) + "\n")
+# print("mse: " + str(mse_lst[500]) + "\n")
