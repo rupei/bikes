@@ -26,6 +26,8 @@ for predict in predicts:
 
         plt.scatter(x, y)
         plt.title(col + " vs " + predict + " with r: " + str(round(np.corrcoef(x, y)[1][0], 3)))
+        plt.xlabel(col)
+        plt.ylabel(predict)
         plt.show()
 
 # plotting categorical variables
@@ -36,20 +38,26 @@ for predict in predicts:
 
         sns.distplot(x, kde=False)
         plt.title("histogram of " + col)
+        plt.xlabel(col)
         plt.show()
 
         plt.scatter(x, y)
         plt.title(col + " vs " + predict)
+        plt.xlabel(col)
+        plt.ylabel(predict)
         plt.show()
 
 # creating correlation heatmap
 df = data.drop(categorical, 1)
 sns.heatmap(df.corr(), vmin=0.0, vmax=1.0, cmap='coolwarm', annot=True)
+plt.title("Correlation Heatmap")
 plt.show()
 
 # testing for hypothesized multicollinearity in atemp vs temp
 x = np.array(data['atemp'])
 y = np.array(data['temp'])
 plt.scatter(x, y)
+plt.xlabel('atemp')
+plt.ylabel('temp')
 plt.title('atemp vs temp with r: ' + str(round(np.corrcoef(x, y)[1][0], 3)))
 plt.show()

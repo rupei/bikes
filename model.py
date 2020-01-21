@@ -16,14 +16,18 @@ data = data[['temp', 'season', 'windspeed', 'hum', 'cnt']]
 
 # plot histogram of data
 sns.distplot(np.array(data['cnt']))
+plt.xlabel('cnt')
+plt.title('Bike Count Histogram')
 plt.show()
 
 # eliminating outliers
-q3, q1 = np.percentile(np.array(data['cnt']), [75,25])
+print("Before: " + str(len(data)))
+q3, q1 = np.percentile(np.array(data['cnt']), [75, 25])
 iqr = q3 - q1
 lo = q1 - (1.5 * iqr)
 hi = q3 + (1.5 * iqr)
 data = data.loc[(data['cnt'] >= lo) & (data['cnt'] <= hi)]
+print("After: " + str(len(data)))
 
 # one hot encoding
 data['spring'] = np.multiply(data['season'] == 1, 1)
@@ -51,6 +55,8 @@ y_pred = model.predict(x_poly_test)
 # evaluating
 plt.scatter(y_pred, y_test)
 plt.title("pred vs actual")
+plt.xlabel('predicted')
+plt.ylabel('actual')
 plt.show()
 
 x_temp = [lst[0] for lst in x_test]
@@ -61,12 +67,14 @@ plt.show()
 accuracy = r2_score(y_test, y_pred)
 mse = mean_squared_error(y_test, y_pred)
 
-print("accuracy: " + str(accuracy) + "\n")
-print("mse: " + str(mse) + "\n")
+print("accuracy (r squared): " + str(round(accuracy, 2)) + "\n")
+print("mse: " + str(round(mse, 2)) + "\n")
 
 y_res = y_pred - y_test
 plt.scatter(x_temp, y_res)
 plt.title("temp vs cnt residuals")
+plt.xlabel('temp')
+plt.ylabel('cnt residuals')
 plt.show()
 
 
